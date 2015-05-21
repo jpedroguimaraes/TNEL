@@ -20,7 +20,7 @@ public class SellerAgentBDI {
 	public void body() {
 		Market.writeLog(this.toString() + " joined the market!");
 		product = new Product();
-		Market.addSeller(this);
+		Market.sellers.add(this);
 	}	
 
 	public String toString() {

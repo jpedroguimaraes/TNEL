@@ -1,11 +1,11 @@
 package agent;
 
-import gui.Market;
 import product.Product;
+import gui.Market;
 import jadex.bdiv3.BDIAgent;
+import jadex.bdiv3.annotation.Belief;
 import jadex.micro.annotation.Agent;
 import jadex.micro.annotation.AgentBody;
-import jadex.bdiv3.annotation.Belief;
 
 @Agent
 public class BuyerAgentBDI {
@@ -20,7 +20,7 @@ public class BuyerAgentBDI {
 	public void body() {
 		Market.writeLog(this.toString() + " joined the market!");
 		product = new Product();
-		Market.addBuyer(this);
+		Market.buyers.add(this);
 	}	
 
 	public String toString() {

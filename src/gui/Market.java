@@ -31,6 +31,7 @@ public class Market extends JFrame {
 	public static String operatorPath = "../bin/agent/OperatorAgentBDI.class";
 	public static String buyerPath = "../bin/agent/BuyerAgentBDI.class";
 	public static String sellerPath = "../bin/agent/SellerAgentBDI.class";
+	public static String testPath = "../bin/agent/TestAgentBDI.class";
 	
 	public static OperatorAgentBDI operator;
 	public static List<BuyerAgentBDI> buyers = new ArrayList<BuyerAgentBDI>();
@@ -89,14 +90,6 @@ public class Market extends JFrame {
 		}
 	}
 	
-	public static void addBuyer(BuyerAgentBDI b) {
-		buyers.add(b);
-	}
-	
-	public static void addSeller(SellerAgentBDI s) {
-		sellers.add(s);
-	}
-	
 	public static void writeLog(String msg) {
 		System.out.println(msg);
 		updateGUI();
@@ -125,7 +118,7 @@ public class Market extends JFrame {
 			}
 		});
 		contentPane.add(addBuyer);
-		JButton addRandom = new JButton("New Trader");
+		JButton addRandom = new JButton("Random");
 		addRandom.setBounds(320, 5, 100, 35);
 		addRandom.addMouseListener(new MouseAdapter() {
 			@Override
