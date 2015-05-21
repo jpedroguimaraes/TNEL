@@ -7,12 +7,17 @@ import jadex.bridge.IExternalAccess;
 import jadex.bridge.service.RequiredServiceInfo;
 import jadex.bridge.service.search.SServiceProvider;
 import jadex.bridge.service.types.cms.IComponentManagementService;
+import jadex.commons.future.IFuture;
 import jadex.commons.future.ThreadSuspendable;
 
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
-import java.util.Vector;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -21,56 +26,84 @@ import javax.swing.JPanel;
 public class Market extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
+	private static JPanel contentPane;
 	
 	public static String operatorPath = "../bin/agent/OperatorAgentBDI.class";
 	public static String buyerPath = "../bin/agent/BuyerAgentBDI.class";
 	public static String sellerPath = "../bin/agent/SellerAgentBDI.class";
 	
-	private ThreadSuspendable sus;
-	private IExternalAccess pl;
-	private IComponentManagementService cms;
+	public static OperatorAgentBDI operator;
+	public static List<BuyerAgentBDI> buyers = new ArrayList<BuyerAgentBDI>();
+	public static List<SellerAgentBDI> sellers = new ArrayList<SellerAgentBDI>();
 	
-	private OperatorAgentBDI operator;
-	private Vector<BuyerAgentBDI> buyers;
-	private Vector<SellerAgentBDI> sellers; 
+	private static ThreadSuspendable sus;
+	private static IExternalAccess pl;
+	private static IComponentManagementService cms;
 
-	public void initJadex()
-	{
-		sus = new ThreadSuspendable();
-		pl = Starter.createPlatform(new String[0]).get(sus);
-		cms = SServiceProvider.getService(pl.getServiceProvider(),IComponentManagementService.class, RequiredServiceInfo.SCOPE_PLATFORM).get(sus);
+	public static void initJadex() {
+		String[] params = new String[2];
+		params[0] = "-gui";
+		params[1] =  "false";
+		IFuture<IExternalAccess> platfut	= Starter.createPlatform(params);
+		sus	= new ThreadSuspendable();
+		pl = platfut.get(sus);
+		cms = SServiceProvider.getService(pl.getServiceProvider(), IComponentManagementService.class, RequiredServiceInfo.SCOPE_PLATFORM).get(sus);
 	}
 	
-	public void initOperator()
-	{
+	public static void initOperator() {
 		@SuppressWarnings("unused")
 		IComponentIdentifier hwm = cms.createComponent(operatorPath, null).getFirstResult(sus);
 	}
 	
-	public void addBuyer()
-	{
+	public static void createBuyer() {
 		@SuppressWarnings("unused")
 		IComponentIdentifier hwm = cms.createComponent(buyerPath, null).getFirstResult(sus);
 	}
 	
-	public void addSeller()
-	{
+	public static void createSeller() {
 		@SuppressWarnings("unused")
 		IComponentIdentifier hwm = cms.createComponent(sellerPath, null).getFirstResult(sus);
 	}
 	
-	public void init()
-	{
+	public static void createRandom() {
+		Random rn = new Random();
+	    switch(rn.nextInt(1)) {
+	    	case 0: createBuyer();
+	    		break;
+	    	case 1: createSeller();
+	    		break;
+	    }
+	}
+	
+	public static void init() {
 		initJadex();
 		while(true) {
-			initOperator();
 			if(operator != null) {
 				buyers.clear();
 				sellers.clear();
 				break;
 			}
+			else {
+				initOperator();
+			}
 		}
+	}
+	
+	public static void addBuyer(BuyerAgentBDI b) {
+		buyers.add(b);
+	}
+	
+	public static void addSeller(SellerAgentBDI s) {
+		sellers.add(s);
+	}
+	
+	public static void writeLog(String msg) {
+		System.out.println(msg);
+		updateGUI();
+	}
+
+	public static void updateGUI() {
+		contentPane.repaint();
 	}
 	
 	public Market() {
@@ -80,18 +113,35 @@ public class Market extends JFrame {
 		setBounds(100, 100, 740, 440);
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		setLocation(((dim.width/2)-(getSize().width/2)),((dim.height/2)-(getSize().height/2)));
-		
 		contentPane = new JPanel();
 		contentPane.setBorder(null);
 		contentPane.setLayout(null);
 		JButton addBuyer = new JButton("Buyer");
-		addBuyer.setBounds(30, 5, 100, 35);
+		addBuyer.setBounds(12, 5, 100, 35);
+		addBuyer.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				createBuyer();
+			}
+		});
 		contentPane.add(addBuyer);
 		JButton addRandom = new JButton("New Trader");
 		addRandom.setBounds(320, 5, 100, 35);
+		addRandom.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				createRandom();
+			}
+		});
 		contentPane.add(addRandom);
 		JButton addSeller = new JButton("Seller");
-		addSeller.setBounds(635, 5, 100, 35);
+		addSeller.setBounds(622, 5, 100, 35);
+		addSeller.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				createSeller();
+			}
+		});
 		contentPane.add(addSeller);
 		setContentPane(contentPane);
 	}
@@ -100,6 +150,7 @@ public class Market extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					init();
 					Market frame = new Market();
 					frame.setVisible(true);
 				} catch (Exception e) {
