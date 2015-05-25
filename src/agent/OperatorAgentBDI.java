@@ -17,4 +17,5 @@ public class OperatorAgentBDI {
 		System.out.println("Operator joined the market!");
 	}
 	
+	
 }
