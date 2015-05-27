@@ -17,23 +17,46 @@ public class Orderbook {
 	public void bid(float p, int pID){
 		Bid b = new Bid(p,1,pID);
 		int i = 0;
-		while(Bids.size() > i){
-			if(Bids.get(i).getPrice() < b.getPrice()){
-				Bids.add(i-1,b);
-				break;
-			}			
+	
+		boolean done = false;
+		
+		if(Bids.size()==0){			
+			Bids.add(b);
+			done = true;
 		}
+		else while(Bids.size() > i){
+			if(Bids.get(i).getPrice() < b.getPrice()){
+				Bids.add(i,b);
+				done = true;
+				break;
+			}
+			i++;
+		}
+		
+		if(!done)
+			Bids.add(b);
 	}
 	
 	public void ask(float p, int pID){
 		Ask a = new Ask(p,1,pID);
 		int i = 0;
+		
+		boolean done = false;
+		
+		if(Asks.size()==0){
+			Asks.add(a);
+			done = true;
+		}
 		while(Asks.size() > i){
 			if(Asks.get(i).getPrice() > a.getPrice()){
-				Asks.add(i-1,a);
+				Asks.add(i,a);
 				break;
-			}			
+			}
+			i++;
 		}
+		i++;
+		if(!done)
+			Asks.add(a);
 	}
 	
 	public void regularMatch(){
@@ -50,12 +73,10 @@ public class Orderbook {
 	}
 	
 	
-	
-	
 	public float calculatePrice(int quantity){
 		float price = 0;
 		
-		for(int i = 0; i <= quantity; i++){
+		for(int i = 0; i < quantity; i++){
 			price+=Asks.get(i).getPrice();
 			price+=Bids.get(i).getPrice();
 		}
@@ -70,18 +91,18 @@ public class Orderbook {
 		
 		float HighestBid = Bids.get(0).getPrice();
 		float LowestAsk = Asks.get(0).getPrice();		
-		int marginalBid=0, marginalAsk=0, bidVolume, AskVolume;
+		int marginalBid=0, marginalAsk=0;
 		
 		if(HighestBid > LowestAsk){ 
 			
 			for(int i = 0; i < Asks.size();i++){
-				if(HighestBid< Asks.get(i).getPrice())
-					marginalAsk = i-1;
+				if(HighestBid <= Asks.get(i).getPrice())
+					marginalAsk = i;
 			}
 			
 			for(int i = 0; i < Bids.size();i++){
-				if(LowestAsk > Bids.get(i).getPrice())
-					marginalBid = i-1;
+				if(LowestAsk >= Bids.get(i).getPrice())
+					marginalBid = i;
 			}			
 			
 			volume = marginalAsk;
@@ -89,7 +110,7 @@ public class Orderbook {
 				volume = marginalBid;
 			
 		}
-		return volume;
+		return volume-1;
 	}
 	
 }
