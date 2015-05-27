@@ -14,7 +14,8 @@ public class Orderbook {
 		Asks = new ArrayList<Ask>();
 	}
 	
-	public void bid(Bid b){
+	public void bid(float p, int pID){
+		Bid b = new Bid(p,1,pID);
 		int i = 0;
 		while(Bids.size() > i){
 			if(Bids.get(i).getPrice() < b.getPrice()){
@@ -24,7 +25,8 @@ public class Orderbook {
 		}
 	}
 	
-	public void ask(Ask a){
+	public void ask(float p, int pID){
+		Ask a = new Ask(p,1,pID);
 		int i = 0;
 		while(Asks.size() > i){
 			if(Asks.get(i).getPrice() > a.getPrice()){
@@ -35,26 +37,59 @@ public class Orderbook {
 	}
 	
 	public void regularMatch(){
-		int i = 0;
-		int j = 0;
-		Bid b;
-		Ask a;
+		
+		int quantity = calculateVolume();
+		float price = calculatePrice(quantity);
 		Match m;
-		float price;
 		
-		
-		
-		while(Bids.size() > i){
-			b = Bids.get(i);
-			
-			while(Asks.size() > j){
-				a = Asks.get(j);
-				
-				//if(b.getPrice() >= a.getPrice())
-					//m = new Match(b,a);
-					
-			}
+		for(int i = 0; i <= quantity; i++){
+			m = new Match(Bids.get(i),Asks.get(i));
+			m.setPrice(price);
+			Matches.add(m);
 		}
+	}
+	
+	
+	
+	
+	public float calculatePrice(int quantity){
+		float price = 0;
+		
+		for(int i = 0; i <= quantity; i++){
+			price+=Asks.get(i).getPrice();
+			price+=Bids.get(i).getPrice();
+		}
+		
+		price = price/(quantity*2);
+		
+		return price;
+	}
+	
+	public int calculateVolume(){
+		int volume = 0;
+		
+		float HighestBid = Bids.get(0).getPrice();
+		float LowestAsk = Asks.get(0).getPrice();		
+		int marginalBid=0, marginalAsk=0, bidVolume, AskVolume;
+		
+		if(HighestBid > LowestAsk){ 
+			
+			for(int i = 0; i < Asks.size();i++){
+				if(HighestBid< Asks.get(i).getPrice())
+					marginalAsk = i-1;
+			}
+			
+			for(int i = 0; i < Bids.size();i++){
+				if(LowestAsk > Bids.get(i).getPrice())
+					marginalBid = i-1;
+			}			
+			
+			volume = marginalAsk;
+			if(volume > marginalBid)
+				volume = marginalBid;
+			
+		}
+		return volume;
 	}
 	
 }
