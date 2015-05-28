@@ -73,6 +73,34 @@ public class Orderbook {
 			b = Bids.get(i);
 			a = Asks.get(i);
 		}
+		
+		float price = calculatePrice(i);
+		for(int j = 0; j < Matches.size(); j++){
+			Matches.get(j).setPrice(price);
+		}
+	}
+	
+	public void maximalVolumeMatch(){
+		
+		int volume = calculateVolume();		
+		int i = 0, j = volume-1;
+		float price;
+		
+		Bid b;
+		Ask a;		
+		Match m;
+		
+		while(j>=0){
+			b = Bids.get(i);
+			a = Asks.get(j);
+			m = new Match(b,a);
+			price = (b.getPrice()+a.getPrice())/2;			
+			m.setPrice(price);
+			Matches.add(m);
+			i++;
+			j--;
+		}
+		
 	}
 	
 	
