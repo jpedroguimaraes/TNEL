@@ -12,6 +12,7 @@ public class Orderbook {
 	public Orderbook(){
 		Bids = new ArrayList<Bid>();
 		Asks = new ArrayList<Ask>();
+		Matches = new ArrayList<Match>();
 	}
 	
 	public void bid(float p, int pID){
@@ -60,15 +61,17 @@ public class Orderbook {
 	}
 	
 	public void regularMatch(){
-		
-		int quantity = calculateVolume();
-		float price = calculatePrice(quantity);
+		Bid b = Bids.get(0);
+		Ask a = Asks.get(0);
 		Match m;
+		int i = 0;
 		
-		for(int i = 0; i <= quantity; i++){
-			m = new Match(Bids.get(i),Asks.get(i));
-			m.setPrice(price);
+		while(b.getPrice() >= a.getPrice()){
+			m = new Match(b,a);
 			Matches.add(m);
+			i++;
+			b = Bids.get(i);
+			a = Asks.get(i);
 		}
 	}
 	

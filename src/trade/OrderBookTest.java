@@ -30,6 +30,9 @@ public class OrderBookTest extends TestCase {
 		
 		
 		assertEquals(ob.calculateVolume(),4);
-		assertEquals(ob.calculatePrice(4),2.0);
+		assertEquals(ob.calculatePrice(4),2.0, 0.0002);
+		
+		ob.regularMatch();
+		System.out.println("Test 1 complete");
 	}
 }
