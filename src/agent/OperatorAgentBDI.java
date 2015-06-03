@@ -19,7 +19,7 @@ public class OperatorAgentBDI {
 	public long currentTime = System.currentTimeMillis();
 	
 	@Belief
-	Orderbook orderbook;
+	public Orderbook orderbook;
 	
 	
 	@AgentBody

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import trade.Ask;
 import trade.Bid;
+import trade.Match;
 import agent.BuyerAgentBDI;
 import agent.OperatorAgentBDI;
 import agent.SellerAgentBDI;
@@ -24,6 +25,8 @@ public interface MessageService {
 	
 	public void register(BuyerAgentBDI b,String id);
 	public void register(SellerAgentBDI s, String id);
+	
+	public void notify(Match m);
 	
 	public void bid(Bid b);
 	public void ask(Ask a);

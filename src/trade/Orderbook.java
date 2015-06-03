@@ -14,8 +14,7 @@ public class Orderbook {
 		Matches = new ArrayList<Match>();
 	}
 	
-	public void bid(float p, int pID){
-		Bid b = new Bid(p,1,pID);
+	public void bid(Bid b){
 		int i = 0;
 	
 		boolean done = false;
@@ -37,8 +36,7 @@ public class Orderbook {
 			Bids.add(b);
 	}
 	
-	public void ask(float p, int pID){
-		Ask a = new Ask(p,1,pID);
+	public void ask(Ask a){
 		int i = 0;
 		
 		boolean done = false;
