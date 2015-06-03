@@ -1,5 +1,6 @@
 package agent;
 
+import trade.Orderbook;
 import gui.Market;
 import jadex.bdiv3.BDIAgent;
 import jadex.bdiv3.annotation.Belief;
@@ -16,6 +17,10 @@ public class OperatorAgentBDI {
 	
 	@Belief(updaterate=1000)
 	public long currentTime = System.currentTimeMillis();
+	
+	@Belief
+	Orderbook orderbook;
+	
 	
 	@AgentBody
 	public void body() {

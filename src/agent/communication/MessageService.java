@@ -16,14 +16,14 @@ public interface MessageService {
 	
 	public IFuture<Void> serviceBody(int value);
 	
-	public Map<String, SellerAgentBDI> SellerList = new HashMap<String, SellerAgentBDI>();
-	public Map<String, BuyerAgentBDI> BuyerList = new HashMap<String, BuyerAgentBDI>();
+	public Map<String, SellerAgentBDI> sellerList = new HashMap<String, SellerAgentBDI>();
+	public Map<String, BuyerAgentBDI> buyerList = new HashMap<String, BuyerAgentBDI>();
 	
 	public void start(OperatorAgentBDI m);
 	public OperatorAgentBDI getMarket();
 	
-	public void register(BuyerAgentBDI b);
-	public void register(SellerAgentBDI s);
+	public void register(BuyerAgentBDI b,String id);
+	public void register(SellerAgentBDI s, String id);
 	
 	public void bid(Bid b);
 	public void ask(Ask a);
