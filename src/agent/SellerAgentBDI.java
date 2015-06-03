@@ -5,9 +5,11 @@ import product.Product;
 import jadex.bdiv3.BDIAgent;
 import jadex.micro.annotation.Agent;
 import jadex.micro.annotation.AgentBody;
+import jadex.micro.annotation.Description;
 import jadex.bdiv3.annotation.Belief;
 
 @Agent
+@Description("This is a Seller Agent.")
 public class SellerAgentBDI {
 
 	@Agent
