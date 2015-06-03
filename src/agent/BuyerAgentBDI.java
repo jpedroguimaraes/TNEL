@@ -21,7 +21,17 @@ public class BuyerAgentBDI {
 		Market.writeLog(this.toString() + " joined the market!");
 		product = new Product();
 		Market.buyers.add(this);
+		Market.fillLists();
+		Market.updateGUI();
 	}	
+	
+	public String getProduct() {
+		return product.getName();
+	}
+	
+	public double getPrice() {
+		return product.getPrice();
+	}
 
 	public String toString() {
 		return buyer.getComponentIdentifier().getLocalName();

@@ -1,6 +1,7 @@
 package gui;
 
 import agent.*;
+import product.*;
 import jadex.base.Starter;
 import jadex.bridge.IComponentIdentifier;
 import jadex.bridge.IExternalAccess;
@@ -22,6 +23,9 @@ import java.util.Random;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 public class Market extends JFrame {
 
@@ -36,10 +40,15 @@ public class Market extends JFrame {
 	public static OperatorAgentBDI operator;
 	public static List<BuyerAgentBDI> buyers = new ArrayList<BuyerAgentBDI>();
 	public static List<SellerAgentBDI> sellers = new ArrayList<SellerAgentBDI>();
+	public static List<Transaction> transactions = new ArrayList<Transaction>();
 	
 	private static ThreadSuspendable sus;
 	private static IExternalAccess pl;
 	private static IComponentManagementService cms;
+	private static JTable buyerlist;
+	private static JTable sellerlist;
+	private static JTable transactionlist;
+
 
 	public static void initJadex() {
 		String[] params = new String[2];
@@ -68,7 +77,7 @@ public class Market extends JFrame {
 	
 	public static void createRandom() {
 		Random rn = new Random();
-	    switch(rn.nextInt(1)) {
+	    switch(rn.nextInt(2)) {
 	    	case 0: createBuyer();
 	    		break;
 	    	case 1: createSeller();
@@ -119,7 +128,7 @@ public class Market extends JFrame {
 		});
 		contentPane.add(addBuyer);
 		JButton addRandom = new JButton("Random");
-		addRandom.setBounds(320, 5, 100, 35);
+		addRandom.setBounds(232, 5, 100, 35);
 		addRandom.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -128,7 +137,7 @@ public class Market extends JFrame {
 		});
 		contentPane.add(addRandom);
 		JButton addSeller = new JButton("Seller");
-		addSeller.setBounds(622, 5, 100, 35);
+		addSeller.setBounds(122, 5, 100, 35);
 		addSeller.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -136,7 +145,68 @@ public class Market extends JFrame {
 			}
 		});
 		contentPane.add(addSeller);
+		
+		buyerlist = new JTable();
+		buyerlist.setBounds(43, 165, 42, -66);
+		DefaultTableModel bdtm = new DefaultTableModel();
+		bdtm.addColumn("Buyer");
+		bdtm.addColumn("Product");
+		bdtm.addColumn("Bid");
+        buyerlist.setModel(bdtm);
+		JScrollPane scrollPaneB = new JScrollPane();
+		scrollPaneB.setLocation(12, 51);
+        scrollPaneB.setSize(320, 168);
+        scrollPaneB.setViewportView(buyerlist);
+        contentPane.add(scrollPaneB);
+		
+		sellerlist = new JTable();
+		sellerlist.setBounds(84, 265, 1, 1);
+		DefaultTableModel sdtm = new DefaultTableModel();
+		sdtm.addColumn("Seller");
+		sdtm.addColumn("Product");
+		sdtm.addColumn("Ask");
+        sellerlist.setModel(sdtm);
+		JScrollPane scrollPaneS = new JScrollPane();
+		scrollPaneS.setLocation(12, 233);
+        scrollPaneS.setSize(320, 168);
+        scrollPaneS.setViewportView(sellerlist);
+        contentPane.add(scrollPaneS);
+
+		transactionlist = new JTable();
+		transactionlist.setBounds(84, 265, 1, 1);
+		DefaultTableModel tdtm = new DefaultTableModel();
+		tdtm.addColumn("Seller");
+		tdtm.addColumn("Buyer");
+		tdtm.addColumn("Product");
+		tdtm.addColumn("Value");
+        transactionlist.setModel(tdtm);
+		JScrollPane scrollPaneT = new JScrollPane();
+		scrollPaneT.setLocation(342, 51);
+        scrollPaneT.setSize(382, 350);
+        scrollPaneT.setViewportView(transactionlist);
+        contentPane.add(scrollPaneT);
+
+        fillLists();
+        
 		setContentPane(contentPane);
+	}
+	
+	public static void fillLists() {
+		DefaultTableModel bdtm = (DefaultTableModel) buyerlist.getModel();
+		bdtm.setRowCount(0);
+		for(int i = 0; i < buyers.size(); i++) {
+			bdtm.addRow(new Object[]{buyers.get(i).toString(),buyers.get(i).getProduct(),buyers.get(i).getPrice()});
+		}
+		DefaultTableModel sdtm = (DefaultTableModel) sellerlist.getModel();
+		sdtm.setRowCount(0);
+		for(int j = 0; j < sellers.size(); j++) {
+			sdtm.addRow(new Object[]{sellers.get(j).toString(),sellers.get(j).getProduct(),sellers.get(j).getPrice()});
+		}
+		DefaultTableModel tdtm = (DefaultTableModel) transactionlist.getModel();
+		tdtm.setRowCount(0);
+		for(int k = 0; k < transactions.size(); k++) {
+			tdtm.addRow(new Object[]{transactions.get(k).getSeller(),transactions.get(k).getBuyer(),transactions.get(k).getProduct(),transactions.get(k).getValue()});
+		}
 	}
 
 	public static void main(String[] args) {
@@ -152,5 +222,4 @@ public class Market extends JFrame {
 			}
 		});
 	}
-
 }

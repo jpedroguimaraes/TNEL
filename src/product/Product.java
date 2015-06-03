@@ -12,7 +12,7 @@ public class Product {
 	
 	public Product() {
 		Random rn = new Random();
-	    name = products[rn.nextInt(2)];
+	    name = products[rn.nextInt(products.length)];
 		Random rp = new Random();
 	    price = Math.floor(pricelimit * rp.nextDouble() * 100) / 100;
 	    System.out.println(name + " : " + price);
