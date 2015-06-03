@@ -5,9 +5,11 @@ import product.Product;
 import jadex.bdiv3.BDIAgent;
 import jadex.micro.annotation.Agent;
 import jadex.micro.annotation.AgentBody;
+import jadex.micro.annotation.Description;
 import jadex.bdiv3.annotation.Belief;
 
 @Agent
+@Description("This is a Seller Agent.")
 public class SellerAgentBDI {
 
 	@Agent
@@ -21,7 +23,17 @@ public class SellerAgentBDI {
 		Market.writeLog(this.toString() + " joined the market!");
 		product = new Product();
 		Market.sellers.add(this);
-	}	
+		Market.fillLists();
+		Market.updateGUI();
+	}		
+	
+	public String getProduct() {
+		return product.getName();
+	}
+	
+	public double getPrice() {
+		return product.getPrice();
+	}
 
 	public String toString() {
 		return seller.getComponentIdentifier().getLocalName();
