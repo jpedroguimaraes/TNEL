@@ -31,6 +31,9 @@ public class BuyerAgentBDI {
 	
 	@Belief
 	private boolean sold = false;
+	
+	@Belief
+	private boolean buying = false;
 
 	@Belief(updaterate=5000)
 	protected long currentTime = System.currentTimeMillis();
@@ -58,31 +61,36 @@ public class BuyerAgentBDI {
 	
 	@Plan(trigger=@Trigger(goals=BuyGoal.class))
 	public void tryingToBuy(BuyGoal b, IPlan iplan) {
-		System.out.println("Plano");
-		//throw new PlanFailureException();
+		System.out.println("Plan");
+		buying = true;
 	}
 	
 	@Plan(trigger=@Trigger(factchangeds="currentTime"))
 	protected void printAddedFact(ChangeEvent event, RPlan rplan)
 	{
-		if(sold) {
-			int i = 0;
-			do {
-				if(idbuyer == Market.buyers.get(i).getID()) {
-					Market.buyers.remove(i);
-					Market.writeLog(this.toString() + " left the market.");
-					break;
+		if(buying) {
+			if(sold) {
+				int i = 0;
+				do {
+					if(idbuyer == Market.buyers.get(i).getID()) {
+						Market.buyers.remove(i);
+						Market.writeLog(this.toString() + " left the market.");
+						buying = false;
+						break;
+					}
+					i++;
+				} while(i < Market.buyers.size());
+			} else {
+				boolean i = false;
+				if(i) {
+					//bidding
+				} else {
+					product.setPrice(Math.floor(((product.getPrice() - (product.getPrice() * 0.2)) * 100)) / 100);
+					System.out.println(product.getPrice());
 				}
-				i++;
-			} while(i < Market.buyers.size());
-		} else {
-			//mandar bid
-			
-			//se falhar:
-			product.setPrice(Math.floor(((product.getPrice() - (product.getPrice() * 0.2)) * 100)) / 100);
-			System.out.println(product.getPrice());
+			}
+			System.out.println(currentTime);
 		}
-		System.out.println(currentTime);
 	}
 	
 	public String getProduct() {
