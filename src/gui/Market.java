@@ -224,7 +224,7 @@ public class Market extends JFrame {
 		}
 		DefaultTableModel tdtm = (DefaultTableModel) transactionlist.getModel();
 		tdtm.setRowCount(0);
-		for(int k = 0; k < transactions.size(); k++) {
+		for(int k = (transactions.size() - 1); k >= 0; k--) {
 			tdtm.addRow(new Object[]{transactions.get(k).getSeller(),transactions.get(k).getBuyer(),transactions.get(k).getProduct(),transactions.get(k).getValue()});
 		}
 	}

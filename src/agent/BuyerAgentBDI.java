@@ -1,5 +1,6 @@
 package agent;
 
+import agent.communication.MessageService;
 import product.Product;
 import gui.Market;
 import jadex.bdiv3.BDIAgent;
@@ -13,10 +14,17 @@ import jadex.bdiv3.runtime.IPlan;
 import jadex.bdiv3.runtime.impl.RPlan;
 import jadex.micro.annotation.Agent;
 import jadex.micro.annotation.AgentBody;
+import jadex.micro.annotation.Binding;
 import jadex.micro.annotation.Description;
+import jadex.micro.annotation.RequiredService;
+import jadex.micro.annotation.RequiredServices;
 
 @Agent
 @Description("This is a Buyer Agent.")
+@RequiredServices({
+	@RequiredService(name="MessageServiceImplementation", type=MessageService.class, 
+			binding=@Binding(scope=Binding.SCOPE_PLATFORM))
+})
 public class BuyerAgentBDI {
 
 	public static int id = 1;
