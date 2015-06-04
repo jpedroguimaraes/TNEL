@@ -1,6 +1,11 @@
 package agent;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import gui.Market;
+import trade.Ask;
+import trade.Bid;
 import trade.Orderbook;
 import jadex.bdiv3.BDIAgent;
 import jadex.bdiv3.annotation.Belief;
@@ -23,11 +28,12 @@ public class OperatorAgentBDI {
 	public long currentTime = System.currentTimeMillis();
 	
 	@Belief
-	public Orderbook orderbook;
+	public Map<Integer,Orderbook> orderbook;
 	
 	@AgentBody
 	public void body() {
 		Market.operator = this;
+		orderbook = new HashMap<Integer, Orderbook>();
 		System.out.println("Operator joined the market!");
 	}
 	
@@ -37,5 +43,21 @@ public class OperatorAgentBDI {
 		// Matching;
 	}
 	
+	public void bid(Bid b){
+		int id = b.getProdID();
+		if(!orderbook.containsKey(id)){
+			Orderbook newProduct = new Orderbook();
+			orderbook.put(id, newProduct);
+		}
+		orderbook.get(id).bid(b);
+	}
 	
+	public void ask(Ask a){
+		int id = a.getProdID();
+		if(!orderbook.containsKey(id)){
+			Orderbook newProduct = new Orderbook();
+			orderbook.put(id, newProduct);
+		}
+		orderbook.get(id).ask(a);
+	}
 }

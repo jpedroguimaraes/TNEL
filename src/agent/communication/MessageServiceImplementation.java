@@ -42,14 +42,13 @@ public class MessageServiceImplementation implements MessageService {
 	}
 
 	@Override
-	public void bid(Bid b) {
-		 market.orderbook.bid(b);
-				 
+	public void bid(Bid b) {		 
+		market.bid(b);
 	}
 
 	@Override
 	public void ask(Ask a) {
-		market.orderbook.ask(a);
+		market.ask(a);
 	}
 
 	@Override
