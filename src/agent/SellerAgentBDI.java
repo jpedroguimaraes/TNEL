@@ -78,20 +78,11 @@ public class SellerAgentBDI {
 	{
 		if(selling) {
 			if(sold) {
-				int i = 0;
-				do {
-					if(idseller == Market.sellers.get(i).getID()) {
-						Market.buyers.remove(i);
-						Market.writeLog(this.toString() + " left the market.");
-						selling = false;
-						break;
-					}
-					i++;
-				} while(i < Market.sellers.size());
+				exitMarket();
 			} else {
 				boolean i = false;
 				if(i) {
-					//offering
+					exitMarket();
 				} else {
 					product.setPrice(Math.floor(((product.getPrice() - (product.getPrice() * 0.2)) * 100)) / 100);
 					System.out.println(product.getPrice());
@@ -100,6 +91,20 @@ public class SellerAgentBDI {
 			System.out.println(currentTime);
 		}
 	}	
+	
+	public boolean exitMarket() {
+		int i = 0;
+		do {
+			if(idseller == Market.sellers.get(i).getID()) {
+				Market.buyers.remove(i);
+				Market.writeLog(this.toString() + " left the market.");
+				selling = false;
+				return true;
+			}
+			i++;
+		} while(i < Market.sellers.size());
+		return false;
+	}
 	
 	public String getProduct() {
 		return product.getName();

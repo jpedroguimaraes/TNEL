@@ -78,20 +78,12 @@ public class BuyerAgentBDI {
 	{
 		if(buying) {
 			if(bought) {
-				int i = 0;
-				do {
-					if(idbuyer == Market.buyers.get(i).getID()) {
-						Market.buyers.remove(i);
-						Market.writeLog(this.toString() + " left the market.");
-						buying = false;
-						break;
-					}
-					i++;
-				} while(i < Market.buyers.size());
+				exitMarket();
 			} else {
-				boolean i = false;
+				//bid
+				boolean i = false; //change to response to bidding
 				if(i) {
-					//bidding
+					exitMarket();
 				} else {
 					product.setPrice(Math.floor(((product.getPrice() + (product.getPrice() * 0.2)) * 100)) / 100);
 					System.out.println(product.getPrice());
@@ -99,6 +91,20 @@ public class BuyerAgentBDI {
 			}
 			System.out.println(currentTime);
 		}
+	}
+	
+	public boolean exitMarket() {
+		int i = 0;
+		do {
+			if(idbuyer == Market.buyers.get(i).getID()) {
+				Market.buyers.remove(i);
+				Market.writeLog(this.toString() + " left the market.");
+				buying = false;
+				return true;
+			}
+			i++;
+		} while(i < Market.buyers.size());
+		return false;
 	}
 	
 	public String getProduct() {
