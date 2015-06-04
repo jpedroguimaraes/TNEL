@@ -54,8 +54,13 @@ public class MessageServiceImplementation implements MessageService {
 	@Override
 	public void notify(Match m) {
 		String bID = m.getBid().getAuthor();
-		//this.buyerList.get(bID)
+		// TODO
+		//this.buyerList.get(bID).notifyMatch()
 		
+		String aID = m.getAsk().getAuthor();
+		// TODO
+		//this.sellerList.get(aID).notifyMatch();
 	}
-
+	
+	
 }
