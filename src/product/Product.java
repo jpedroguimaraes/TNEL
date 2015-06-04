@@ -15,7 +15,6 @@ public class Product {
 	    name = products[rn.nextInt(products.length)];
 		Random rp = new Random();
 	    price = Math.floor(pricelimit * rp.nextDouble() * 100) / 100;
-	    System.out.println(name + " : " + price);
 	}
 	
 	public String getName() {
@@ -24,6 +23,10 @@ public class Product {
 	
 	public double getPrice() {
 		return price;
+	}
+	
+	public void setPrice(double p) {
+		price = p;
 	}
 	
 }

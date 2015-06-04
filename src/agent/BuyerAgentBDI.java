@@ -5,7 +5,12 @@ import gui.Market;
 import jadex.bdiv3.BDIAgent;
 import jadex.bdiv3.annotation.Belief;
 import jadex.bdiv3.annotation.Goal;
-import jadex.bdiv3.annotation.GoalRecurCondition;
+import jadex.bdiv3.annotation.GoalCreationCondition;
+import jadex.bdiv3.annotation.Plan;
+import jadex.bdiv3.annotation.Trigger;
+import jadex.bdiv3.runtime.ChangeEvent;
+import jadex.bdiv3.runtime.IPlan;
+import jadex.bdiv3.runtime.impl.RPlan;
 import jadex.micro.annotation.Agent;
 import jadex.micro.annotation.AgentBody;
 import jadex.micro.annotation.Description;
@@ -14,17 +19,26 @@ import jadex.micro.annotation.Description;
 @Description("This is a Buyer Agent.")
 public class BuyerAgentBDI {
 
+	public static int id = 1;
+	
+	public int idbuyer;
+	
 	@Agent
 	BDIAgent buyer;
 	
 	@Belief
 	private Product product;
+	
+	@Belief
+	private boolean sold = false;
 
-	@Belief(updaterate=1000)
-	public long currentTime = System.currentTimeMillis();
+	@Belief(updaterate=5000)
+	protected long currentTime = System.currentTimeMillis();
 	
 	@AgentBody
 	public void body() {
+		idbuyer = id;
+		id++;
 		Market.writeLog(this.toString() + " joined the market!");
 		product = new Product();
 		Market.buyers.add(this);
@@ -35,43 +49,40 @@ public class BuyerAgentBDI {
 	@Goal(recur=true)
 	public class BuyGoal {
 		
-		public boolean sold;
-		
+		@GoalCreationCondition(beliefs="product")
 		public BuyGoal() {
 			sold = false;
 		}
 		
-		@GoalRecurCondition(beliefs="currentTime")
-		public void verifyStatus() {
-			if(sold) {
-				System.out.println("Sold!.");
-			} else {
-				System.out.println("Still here.");
-			}
-			System.out.println(currentTime);
+	}
+	
+	@Plan(trigger=@Trigger(goals=BuyGoal.class))
+	public void tryingToBuy(BuyGoal b, IPlan iplan) {
+		System.out.println("Plano");
+		//throw new PlanFailureException();
+	}
+	
+	@Plan(trigger=@Trigger(factchangeds="currentTime"))
+	protected void printAddedFact(ChangeEvent event, RPlan rplan)
+	{
+		if(sold) {
+			int i = 0;
+			do {
+				if(idbuyer == Market.buyers.get(i).getID()) {
+					Market.buyers.remove(i);
+					Market.writeLog(this.toString() + " left the market.");
+					break;
+				}
+				i++;
+			} while(i < Market.buyers.size());
+		} else {
+			//mandar bid
+			
+			//se falhar:
+			product.setPrice(Math.floor(((product.getPrice() - (product.getPrice() * 0.2)) * 100)) / 100);
+			System.out.println(product.getPrice());
 		}
-		/*Product produtoAdicionado;
-		List<SellerAgentBDI> vendedoresProdutoAdicionado;
-		int numExecucoesPlano;
-
-
-		@GoalCreationCondition(beliefs="productadded")
-		public BuyGoal() {
-			if (products.size() > 0) {
-				produtoAdicionado = products.get(products.size()-1);
-				numExecucoesPlano = 0;
-				vaiBuscarSellersParaOProduto();
-			}
-			//In the beggining, this Goal is created when setup productadded variable/belief
-			else 
-				produtoAdicionado = null;
-		}
-
-		@GoalRecurCondition(beliefs="currentTime")
-		public boolean vaiBuscarSellersParaOProduto() {
-			vendedoresProdutoAdicionado = market.getSellersOfThisProduct(produtoAdicionado);
-			return true;
-		}*/
+		System.out.println(currentTime);
 	}
 	
 	public String getProduct() {
@@ -81,9 +92,13 @@ public class BuyerAgentBDI {
 	public double getPrice() {
 		return product.getPrice();
 	}
+	
+	public int getID() {
+		return idbuyer;
+	}
 
 	public String toString() {
-		return buyer.getComponentIdentifier().getLocalName();
+		return "Buyer" + idbuyer;
 	}
 	
 	public boolean isBuyer() {

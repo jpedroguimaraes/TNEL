@@ -19,7 +19,6 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -152,7 +151,12 @@ public class Market extends JFrame {
 		});
 		contentPane.add(addSeller);
 		
-		buyerlist = new JTable();
+		buyerlist = new JTable() {
+			private static final long serialVersionUID = 1L;
+			public boolean isCellEditable(int row, int column){
+				return false;
+			}
+		};
 		buyerlist.setBounds(43, 165, 42, -66);
 		DefaultTableModel bdtm = new DefaultTableModel();
 		bdtm.addColumn("Buyer");
@@ -165,7 +169,12 @@ public class Market extends JFrame {
         scrollPaneB.setViewportView(buyerlist);
         contentPane.add(scrollPaneB);
 		
-		sellerlist = new JTable();
+		sellerlist = new JTable() {
+			private static final long serialVersionUID = 1L;
+			public boolean isCellEditable(int row, int column){
+				return false;
+			}
+		};
 		sellerlist.setBounds(84, 265, 1, 1);
 		DefaultTableModel sdtm = new DefaultTableModel();
 		sdtm.addColumn("Seller");
@@ -178,7 +187,12 @@ public class Market extends JFrame {
         scrollPaneS.setViewportView(sellerlist);
         contentPane.add(scrollPaneS);
 
-		transactionlist = new JTable();
+		transactionlist = new JTable() {
+			private static final long serialVersionUID = 1L;
+			public boolean isCellEditable(int row, int column){
+				return false;
+			}
+		};
 		transactionlist.setBounds(84, 265, 1, 1);
 		DefaultTableModel tdtm = new DefaultTableModel();
 		tdtm.addColumn("Seller");
