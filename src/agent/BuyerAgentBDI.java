@@ -30,7 +30,7 @@ public class BuyerAgentBDI {
 	private Product product;
 	
 	@Belief
-	private boolean sold = false;
+	private boolean bought = false;
 	
 	@Belief
 	private boolean buying = false;
@@ -54,22 +54,22 @@ public class BuyerAgentBDI {
 		
 		@GoalCreationCondition(beliefs="product")
 		public BuyGoal() {
-			sold = false;
+			bought = false;
 		}
 		
 	}
 	
 	@Plan(trigger=@Trigger(goals=BuyGoal.class))
-	public void tryingToBuy(BuyGoal b, IPlan iplan) {
+	public void initateBuying(BuyGoal b, IPlan iplan) {
 		System.out.println("Plan");
 		buying = true;
 	}
 	
 	@Plan(trigger=@Trigger(factchangeds="currentTime"))
-	protected void printAddedFact(ChangeEvent event, RPlan rplan)
+	protected void tryingToBuy(ChangeEvent event, RPlan rplan)
 	{
 		if(buying) {
-			if(sold) {
+			if(bought) {
 				int i = 0;
 				do {
 					if(idbuyer == Market.buyers.get(i).getID()) {
@@ -85,7 +85,7 @@ public class BuyerAgentBDI {
 				if(i) {
 					//bidding
 				} else {
-					product.setPrice(Math.floor(((product.getPrice() - (product.getPrice() * 0.2)) * 100)) / 100);
+					product.setPrice(Math.floor(((product.getPrice() + (product.getPrice() * 0.2)) * 100)) / 100);
 					System.out.println(product.getPrice());
 				}
 			}
