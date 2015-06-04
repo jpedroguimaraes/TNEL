@@ -2,16 +2,18 @@ package trade;
 
 import java.util.ArrayList;
 
+import product.Transaction;
+
 public class Orderbook {
 
 	ArrayList<Bid> Bids;
 	ArrayList<Ask> Asks;
-	ArrayList<Match> Matches;
+	ArrayList<Transaction> Transactions;
 	
 	public Orderbook(){
 		Bids = new ArrayList<Bid>();
 		Asks = new ArrayList<Ask>();
-		Matches = new ArrayList<Match>();
+		Transactions = new ArrayList<Transaction>();
 	}
 	
 	public void bid(Bid b){
@@ -60,20 +62,20 @@ public class Orderbook {
 	public void regularMatch(){
 		Bid b = Bids.get(0);
 		Ask a = Asks.get(0);
-		Match m;
+		Transaction t;
 		int i = 0;
 		
 		while(b.getPrice() >= a.getPrice()){
-			m = new Match(b,a);
-			Matches.add(m);
+			t = new Transaction(a.getSeller(),b.getBuyer(),b.getProd(),0);
+			Transactions.add(t);
 			i++;
 			b = Bids.get(i);
 			a = Asks.get(i);
 		}
 		
-		float price = calculatePrice(i);
-		for(int j = 0; j < Matches.size(); j++){
-			Matches.get(j).setPrice(price);
+		double price = calculatePrice(i);
+		for(int j = 0; j < Transactions.size(); j++){
+			Transactions.get(j).setValue(price);
 		}
 	}
 	
@@ -81,28 +83,26 @@ public class Orderbook {
 		
 		int volume = calculateVolume();		
 		int i = 0, j = volume-1;
-		float price;
+		double price;
 		
 		Bid b;
 		Ask a;		
-		Match m;
+		Transaction t;
 		
 		while(j>=0){
 			b = Bids.get(i);
 			a = Asks.get(j);
-			m = new Match(b,a);
-			price = (b.getPrice()+a.getPrice())/2;			
-			m.setPrice(price);
-			Matches.add(m);
+			price = (b.getPrice()+a.getPrice())/2;
+			t = new Transaction(a.getSeller(), b.getBuyer(), b.getProd(), price);						
+			Transactions.add(t);
 			i++;
 			j--;
 		}
 		
 	}
 	
-	
-	public float calculatePrice(int quantity){
-		float price = 0;
+	public double calculatePrice(int quantity){
+		double price = 0;
 		
 		for(int i = 0; i < quantity; i++){
 			price+=Asks.get(i).getPrice();
@@ -115,6 +115,7 @@ public class Orderbook {
 	}
 	
 	public int calculateVolume(){
+
 		int volume = 0;
 		
 		float HighestBid = Bids.get(0).getPrice();
@@ -139,6 +140,10 @@ public class Orderbook {
 			
 		}
 		return volume-1;
+	}
+
+	public ArrayList<Transaction> getTransactions(){
+		return this.Transactions;
 	}
 	
 }

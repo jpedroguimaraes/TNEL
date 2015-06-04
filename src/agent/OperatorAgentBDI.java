@@ -1,11 +1,16 @@
 package agent;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+
+import product.Transaction;
 
 import gui.Market;
 import trade.Ask;
 import trade.Bid;
+import trade.Match;
 import trade.Orderbook;
 import jadex.bdiv3.BDIAgent;
 import jadex.bdiv3.annotation.Belief;
@@ -41,6 +46,17 @@ public class OperatorAgentBDI {
 	protected void printAddedFact(ChangeEvent event, RPlan rplan)
 	{
 		// Matching;
+		// TODO Add ability to choose matching type (Regular/Max Volume)
+		
+		ArrayList<Transaction> Transactions = new ArrayList<Transaction>();
+		
+		for(Orderbook ob : orderbook.values()){
+			ob.regularMatch();
+			Transactions.addAll(ob.getTransactions());
+		}
+		
+		Market.transactions.clear();
+		Market.transactions.addAll(Transactions);
 	}
 	
 	public void bid(Bid b){

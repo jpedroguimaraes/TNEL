@@ -1,5 +1,7 @@
 package product;
 
+import trade.Ask;
+import trade.Bid;
 import agent.*;
 
 public class Transaction {
@@ -30,6 +32,10 @@ public class Transaction {
 	
 	public double getValue() {
 		return value;
+	}
+	
+	public void setValue(double p){
+		this.value = p;
 	}
 	
 }
