@@ -28,12 +28,12 @@ public class OperatorAgentBDI {
 	public long currentTime = System.currentTimeMillis();
 	
 	@Belief
-	public Map<Integer,Orderbook> orderbook;
+	public Map<String,Orderbook> orderbook;
 	
 	@AgentBody
 	public void body() {
 		Market.operator = this;
-		orderbook = new HashMap<Integer, Orderbook>();
+		orderbook = new HashMap<String, Orderbook>();
 		System.out.println("Operator joined the market!");
 	}
 	
@@ -44,7 +44,7 @@ public class OperatorAgentBDI {
 	}
 	
 	public void bid(Bid b){
-		int id = b.getProdID();
+		String id = b.getProd().getName();
 		if(!orderbook.containsKey(id)){
 			Orderbook newProduct = new Orderbook();
 			orderbook.put(id, newProduct);
@@ -53,7 +53,7 @@ public class OperatorAgentBDI {
 	}
 	
 	public void ask(Ask a){
-		int id = a.getProdID();
+		String id = a.getProd().getName();
 		if(!orderbook.containsKey(id)){
 			Orderbook newProduct = new Orderbook();
 			orderbook.put(id, newProduct);

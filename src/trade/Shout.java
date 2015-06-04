@@ -3,21 +3,22 @@ package trade;
 import java.sql.Timestamp;
 import java.util.Date;
 
+import product.Product;
+
 public class Shout {
 
 	private float price;
 	private float quantity;
 	private float total;
-	private int prodID;
+	private Product product;
 	private Timestamp time;
 	private String authorID;
 	
-	public Shout(float p, float q, int pID, String aID){
+	public Shout(float p, float q, Product prod){
 		this.price = p;
 		this.quantity = q;
 		this.total = price*quantity;
-		this.prodID = pID;
-		this.authorID = aID;
+		this.product = prod;
 		Date date = new Date();
 		time = new Timestamp(date.getTime()); 
 	}
@@ -34,8 +35,8 @@ public class Shout {
 		return total;
 	}
 
-	public int getProdID() {
-		return prodID;
+	public Product getProd() {
+		return product;
 	}
 	
 	public Timestamp getTime(){
